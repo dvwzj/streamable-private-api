@@ -1,0 +1,37 @@
+{
+  "name": "streamable-private-api",
+  "version": "1.0.0",
+  "description": "Streamable Private API",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dvwzj/streamable-private-api.git"
+  },
+  "author": "dvwzj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dvwzj/streamable-private-api/issues"
+  },
+  "homepage": "https://github.com/dvwzj/streamable-private-api#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.1"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "axios-cookiejar-support": "^1.0.0",
+    "change-case": "^4.1.1",
+    "get-video-duration": "^3.0.0-beta.1",
+    "lodash": "^4.17.15",
+    "moment-timezone": "^0.5.31",
+    "numeral": "^2.0.6",
+    "tough-cookie": "^4.0.0",
+    "user-agents": "^1.0.559"
+  }
+}
