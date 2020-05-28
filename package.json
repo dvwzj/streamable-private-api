@@ -1,6 +1,6 @@
 {
   "name": "streamable-private-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Streamable Private API",
   "main": "lib/index.js",
   "scripts": {
