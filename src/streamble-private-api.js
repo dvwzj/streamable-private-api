@@ -143,7 +143,7 @@ class StreamablePrivateAPI {
                   poll2Data
                 )
                 .then((res4) => {
-                  console.log('poll response', res4.data)
+                  // console.log('poll response', res4.data)
                   clips = res4.data
                   // percent = _.reduce(res4.data, (p, vid) => {
                   //   if (vid.percent) {
