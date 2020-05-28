@@ -84,7 +84,9 @@ class StreamablePrivateAPI {
         const exists = _.filter(videos, (video) => {
           return _.trim(video.source_url, '/') === _.trim(source, '/')
         })
-        resolve(exists)
+        resolve(_.uniqBy(exists, (video) => {
+          return `${_.trim(video.source_url, '/')}/${video.title}`
+        }))
       } catch (e) {
         reject(e)
       }
