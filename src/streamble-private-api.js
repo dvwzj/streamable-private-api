@@ -93,19 +93,19 @@ class StreamablePrivateAPI {
     })
   }
 
-  upload (url, title, force) {
+  upload (url, title, force, source, extract_id) {
     try {
       force = force === undefined ? false : force
       if (force === true) {
-        this.forceUpload(url, title)
+        this.forceUpload(url, title, source, extract_id)
       } else {
         this
-          .exists(url)
+          .exists(source ? source : url)
           .then((exists) => {
             if (_.size(exists)) {
               this.videoUploadEmitter.emit('completed', exists)
             } else {
-              this.forceUpload(url, title)
+              this.forceUpload(url, title, source, extract_id)
             }
           })
           .catch((e) => {
@@ -118,7 +118,7 @@ class StreamablePrivateAPI {
     return this.videoUploadEmitter
   }
 
-  forceUpload (url, title) {
+  forceUpload (url, title, source, extract_id) {
     try {
       const plan_max_length = this.auth.plan_max_length || 600
       const query = querystring.stringify({
@@ -130,9 +130,9 @@ class StreamablePrivateAPI {
         .get(`https://ajax.streamable.com/extract?${query}`)
         .then(async (res) => {
           const videosData = {
-            extract_id: res.data.id,
+            extract_id: extract_id ? extract_id : res.data.id,
             extractor: res.data.extractor,
-            source: url,
+            source: source ? source : url,
             status: 1,
             title,
             upload_source: 'clip',
