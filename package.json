@@ -20,18 +20,16 @@
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.1",
-    "@babel/plugin-transform-runtime": "^7.10.1",
-    "@babel/preset-env": "^7.10.1"
+    "@babel/preset-env": "^7.10.1",
+    "esm": "^3.2.25"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "axios-cookiejar-support": "^1.0.0",
     "change-case": "^4.1.1",
     "get-video-duration": "^3.0.0-beta.1",
     "lodash": "^4.17.15",
     "moment-timezone": "^0.5.31",
     "numeral": "^2.0.6",
-    "tough-cookie": "^4.0.0",
+    "req-fast-promise": "^1.0.19",
     "user-agents": "^1.0.559"
   }
 }

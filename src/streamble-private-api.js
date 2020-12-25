@@ -1,8 +1,5 @@
 import querystring from 'querystring'
-import axios from 'axios'
-import axiosCookieJarSupport  from 'axios-cookiejar-support'
-import tough from 'tough-cookie'
-import userAgents from 'user-agents'
+import { ReqFastPromise } from 'req-fast-promise'
 import { getVideoDurationInSeconds } from 'get-video-duration'
 import VideoUploadEmitter from './video-upload-emitter'
 import _ from 'lodash'
@@ -13,14 +10,11 @@ class StreamablePrivateAPI {
       enumerable: false,
       writable: true
     })
-    Object.defineProperty(this, 'axios', {
+    Object.defineProperty(this, 'http', {
       enumerable: false,
       writable: true,
-      value: axios.create({
-        withCredentials: true,
-        headers: {
-          'user-agent': (new userAgents()).toString()
-        }
+      value: new ReqFastPromise({
+        headers: {}
       })
     })
     Object.defineProperty(this, 'videoUploadEmitter', {
@@ -28,15 +22,13 @@ class StreamablePrivateAPI {
       writable: true,
       value: new VideoUploadEmitter()
     })
-    axiosCookieJarSupport(this.axios)
-    this.axios.defaults.jar = new tough.CookieJar()
   }
 
   async login (username, password) {
     return new Promise((resolve, reject) => {
       try {
         this
-          .axios
+          .http
           .post(
             'https://ajax.streamable.com/check',
             {
@@ -46,6 +38,9 @@ class StreamablePrivateAPI {
           )
           .then((res) => {
             this.auth = res.data
+            this.http.defaults.headers = _.merge(this.http.defaults.headers, {
+              'cookie': `user_name=${res.cookies.user_name}; user_code=${res.cookies.user_code}`
+            })
             resolve(this)
           })
           .catch(reject)
@@ -61,10 +56,10 @@ class StreamablePrivateAPI {
         const maxPage = Math.ceil(this.auth.total_videos / 12)
         const requests = _.times(maxPage, (index) => {
           return this
-            .axios
+            .http
             .get(`https://ajax.streamable.com/videos?sort=date_added&sortd=DESC&count=12&page=${index + 1}`)
         })
-        axios
+        Promise
           .all(requests)
           .then((results) => {
             const videos = _.flatten(_.map(results, 'data.videos'))
@@ -126,7 +121,7 @@ class StreamablePrivateAPI {
       })
       title = title === undefined ? '' : title
       this
-        .axios
+        .http
         .get(`https://ajax.streamable.com/extract?${query}`)
         .then(async (res) => {
           const videosData = {
@@ -149,7 +144,7 @@ class StreamablePrivateAPI {
             return new Promise((resolve, reject) => {
               const start = index * plan_max_length
               this
-                .axios
+                .http
                 .post(
                   'https://ajax.streamable.com/videos',
                   _.merge(
@@ -176,7 +171,7 @@ class StreamablePrivateAPI {
                   }
                   this.videoUploadEmitter.emit('setup', { response: res2.data, data: transcodeData })
                   this
-                    .axios
+                    .http
                     .post(
                       `https://ajax.streamable.com/transcode/${res2.data.shortcode}`,
                       transcodeData
@@ -201,7 +196,7 @@ class StreamablePrivateAPI {
               let videos = []
               do {
                 this
-                  .axios
+                  .http
                   .post(
                     'https://ajax.streamable.com/poll2',
                     poll2Data
