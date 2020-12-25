@@ -26,7 +26,7 @@
   "dependencies": {
     "change-case": "^4.1.1",
     "get-video-duration": "^3.0.0-beta.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "moment-timezone": "^0.5.31",
     "numeral": "^2.0.6",
     "req-fast-promise": "^1.0.19",
