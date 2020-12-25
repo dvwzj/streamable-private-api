@@ -1,4 +1,3 @@
-import querystring from 'querystring'
 import { ReqFastPromise } from 'req-fast-promise'
 import { getVideoDurationInSeconds } from 'get-video-duration'
 import VideoUploadEmitter from './video-upload-emitter'
@@ -39,7 +38,7 @@ class StreamablePrivateAPI {
           .then((res) => {
             this.auth = res.data
             this.http.defaults.headers = _.merge(this.http.defaults.headers, {
-              'cookie': `user_name=${res.cookies.user_name}; user_code=${res.cookies.user_code}`
+              'cookie': `user_name=${res.cookies.user_name}; user_code=${res.cookies.user_code}; session=${res.cookies.session}`
             })
             resolve(this)
           })
@@ -116,13 +115,17 @@ class StreamablePrivateAPI {
   forceUpload (url, title, source, extract_id) {
     try {
       const plan_max_length = this.auth.plan_max_length || 600
-      const query = querystring.stringify({
-        url
-      })
+      // const query = querystring.stringify({
+      //   url
+      // })
       title = title === undefined ? '' : title
       this
         .http
-        .get(`https://ajax.streamable.com/extract?${query}`)
+        .get(`https://ajax.streamable.com/extract`, {
+          params: {
+            url: encodeURIComponent(url)
+          }
+        })
         .then(async (res) => {
           const videosData = {
             extract_id: extract_id ? extract_id : res.data.id,
